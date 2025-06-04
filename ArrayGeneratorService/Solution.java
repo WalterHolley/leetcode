@@ -12,25 +12,25 @@ public class Solution {
         int startIndex = state.indexOf('1');
 
         for(int i = 0; i < m; i++){
+            //find all current available states
             List<Integer> processingStates = IntStream.range(0, states.length)
                     .filter(e -> states[e] == '1' )
                     .boxed().toList();
 
+            //find max
             result.add(Collections.max(numValues.stream()
                     .filter(e -> processingStates.contains(numValues.indexOf(e)))
                     .toList()));
             System.out.println(processingStates);
 
-            for(int j = startIndex; j < states.length; j++){
-                if((states[j] == '0' && j - 1 >= 0)){
-                    if(states[j - 1] == '1'){
-                        states[j] = '1';
-                        startIndex = j;
-                        break;
-                    }
+            //update state
+            int nextUpdate = IntStream.range(0, states.length)
+                    .filter(e -> (states[e] == '0' && e - 1 >=0 && states[e - 1] == '1'))
+                    .findFirst()
+                    .orElse(-1);
+            if(nextUpdate >= 0)
+                states[nextUpdate] = '1';
 
-                }
-            }
         }
         return result;
     }
