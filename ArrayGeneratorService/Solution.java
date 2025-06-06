@@ -34,27 +34,35 @@ public class Solution {
 
     public static List<Integer> getArray(List<Integer> numValues, String state, Integer m){
         List<Integer> result = new ArrayList<>();
-        HashSet<Integer> availableStates = new HashSet<>();
         char[] states = state.toCharArray();
         int startIndex = 0;
-        boolean zeroFound = false;
+        int max = 0;
+
         for(int i = 0; i < m; i++){
             int nextState = startIndex;
+            boolean zeroFound = false;
 
             //manage state
+            System.out.print("Start index: " + startIndex + " ");
+            System.out.println(states);
             for(int j = startIndex; j < state.length(); j++){
-                if(states[j] == '1')
-                    availableStates.add(j);
+                if(states[j] == '1' && (j < numValues.size()) && numValues.get(j) > max)
+                    max = numValues.get(j);
                 else if(states[j] == '0' && !zeroFound && j - 1 >= 0 && states[j - 1] == '1'){// update state
                     nextState = j;
                     zeroFound = true;
                     states[j] = '1';
 
-                    if(i > 0)
+                    if(i > 0){
+                        System.out.println("Exiting states at " + j);
                         break;
+                    }
                 }
             }
-            //fin
+            startIndex = nextState;
+            result.add(max);
+            System.out.println(result);
+
         }
 
         return result;
@@ -65,8 +73,12 @@ public class Solution {
         List<Integer> arr = Arrays.asList(4,9,1,2,10);
         String state = "0010011110";
         int m = 4;
-
+        System.out.println("Result with streams");
         List<Integer> result = getArrayWithStream(arr, state, m);
+        System.out.println(result);
+
+        System.out.println("Optimized result");
+        result = getArray(arr, state, m);
         System.out.println(result);
 
     }
